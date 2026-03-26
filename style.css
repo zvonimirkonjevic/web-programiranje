@@ -29,37 +29,64 @@ body {
 /* Navigation */
 nav {
     background-color: var(--imdb-dark-gray);
-    padding: 10px 20px;
+    padding: 10px 30px;
     margin-bottom: 30px;
     border-radius: 8px;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    display: inline-block;
+    background-color: var(--imdb-gold);
+    color: var(--imdb-black);
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: -1px;
+    transition: transform 0.2s, background-color 0.2s;
+    user-select: none;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    background-color: #fbd54e;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
 }
 
 nav ul li a {
     color: var(--text-white);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9rem;
-    padding: 8px 12px;
+    padding: 8px 16px;
     border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
+    transition: all 0.2s;
 }
 
 nav ul li a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
     color: var(--imdb-gold);
+}
+
+nav ul li a.active {
+    background-color: var(--imdb-gold);
+    color: var(--imdb-black);
+}
+
+nav ul li a.active:hover {
+    background-color: #fbd54e;
 }
 
 /* Hamburger Styles (Hidden by default) */
@@ -93,11 +120,86 @@ h1 {
     color: var(--imdb-gold);
 }
 
-/* Table */
+/* Layout */
+.content-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    padding-bottom: 50px;
+}
+
 .table-container {
-    flex: 1;
+    flex: 3;
     overflow-x: auto;
-    margin-bottom: 40px;
+}
+
+.ads-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+}
+
+.ad-slot {
+    background-color: var(--imdb-dark-gray);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 20px;
+    transition: background-color 0.3s;
+}
+
+.ad-slot:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.ad-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.ad-slot img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-gray);
+}
+
+.ad-info h3 {
+    font-size: 1.1rem;
+    color: var(--imdb-gold);
+    margin-bottom: 8px;
+}
+
+.ad-info p {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.ad-button {
+    display: inline-block;
+    background-color: var(--imdb-gold);
+    color: var(--imdb-black);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.ad-button:hover {
+    transform: translateY(-2px);
+    background-color: #fbd54e;
 }
 
 table {
@@ -132,6 +234,16 @@ tr:last-child td {
     border-bottom: none;
 }
 
+table img {
+    width: 45px;
+    height: 67px;
+    object-fit: cover;
+    border-radius: 4px;
+    background-color: var(--imdb-dark-gray);
+    border: 1px solid var(--border-gray);
+    display: block;
+}
+
 /* Footer */
 footer {
     padding: 30px 0;
@@ -146,6 +258,16 @@ footer p {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .ads-sidebar {
+        width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     h1 {
         font-size: 1.8rem;
@@ -260,6 +382,25 @@ footer p {
         font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    /* Poster specific styling in card */
+    td[data-label="Poster"] {
+        justify-content: center;
+        padding-left: 15px !important;
+        text-align: center !important;
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    td[data-label="Poster"]:before {
+        display: none;
+    }
+
+    td[data-label="Poster"] img {
+        width: 120px;
+        height: 180px;
+        margin: 0 auto;
     }
 
     td[data-label="Title"] {

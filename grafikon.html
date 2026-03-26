@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDb - Statistics</title>
+    <meta name="description" content="Visualize average ratings by genre and explore movie statistics on IMDb.">
+    <meta name="keywords" content="movies, IMDb, statistics, genres, ratings, visualization">
+    <meta name="author" content="Zvonimir Konjevic">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="IMDb - Statistics">
+    <meta property="og:description" content="Visualize average ratings by genre and explore movie statistics on IMDb.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_grafikon.css">
+</head>
+
+<body class="page-transition">
+    <nav>
+        <a href="index.html" class="logo">IMDb</a>
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <ul>
+            <li><a href="index.html">Movie list</a></li>
+            <li><a href="slike.html">Images page</a></li>
+            <li><a href="grafikon.html" class="active">Statistics page</a></li>
+        </ul>
+    </nav>
+    <h1>Statistics</h1>
+
+    <!-- Bar Chart: Average Rating by Genre -->
+    <section class="chart-section">
+        <h2>Average Rating by Top 5 Genres</h2>
+        <div class="bar-chart">
+            <div class="bar-row">
+                <span class="bar-label">Dramas</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="--bar-width: 86%;">
+                        <span class="bar-value">8.6</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Thrillers</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="--bar-width: 79%;">
+                        <span class="bar-value">7.9</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Comedies</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="--bar-width: 74%;">
+                        <span class="bar-value">7.4</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Documentaries</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="--bar-width: 71%;">
+                        <span class="bar-value">7.1</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Sci-Fi</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="--bar-width: 68%;">
+                        <span class="bar-value">6.8</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <form action="#" method="post">
+            <fieldset>
+                <legend>Personal Information</legend>
+                <div class="form-row">
+                    <label for="ime">First name:</label>
+                    <input type="text" id="ime" name="ime">
+                    <label for="prezime">Last name:</label>
+                    <input type="text" id="prezime" name="prezime">
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-dalje">Next</button>
+
+            <div class="form-row select-row">
+                <label for="zanr">Select genre:</label>
+                <select id="zanr" name="zanr">
+                    <option value="">-- Select --</option>
+                    <option value="dramas">Dramas</option>
+                    <option value="thrillers">Thrillers</option>
+                    <option value="comedies">Comedies</option>
+                    <option value="documentaries">Documentaries</option>
+                    <option value="sci-fi">Sci-Fi &amp; Fantasy</option>
+                </select>
+            </div>
+        </form>
+    </section>
+
+    <footer>
+        <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>
+        <p>Created by: Zvonimir Konjevic</p>
+    </footer>
+</body>
+
+</html>

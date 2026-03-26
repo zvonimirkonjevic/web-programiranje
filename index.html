@@ -22,6 +22,7 @@
 
 <body>
     <nav>
+        <a href="index.html" class="logo">IMDb</a>
         <input type="checkbox" id="menu-toggle">
         <label for="menu-toggle" class="hamburger">
             <span></span>
@@ -29,19 +30,19 @@
             <span></span>
         </label>
         <ul>
-            <li><a href="#">By Genre</a></li>
-            <li><a href="#">By Year</a></li>
-            <li><a href="#">By Rating</a></li>
-            <li><a href="#">By Duration</a></li>
-            <li><a href="#">By Title</a></li>
+            <li><a href="index.html" class="active">Movie list</a></li>
+            <li><a href="slike.html">Images page</a></li>
+            <li><a href="grafikon.html">Statistics page</a></li>
         </ul>
     </nav>
     <h1>IMDb Top 50 Movies</h1>
+    <div class="content-wrapper">
+
     <div class="table-container">
         <table>
         <thead>
             <tr>
-                <th>Rank</th>
+                <th>Poster</th><th>Rank</th>
                 <th>Title</th>
                 <th>Year</th>
                 <th>Duration</th>
@@ -49,62 +50,47 @@
                 <th>Genre</th>
             </tr>
         </thead>
-        <tbody>
-            <tr><td data-label="Rank">1</td><td data-label="Title">Dick Johnson Is Dead</td><td data-label="Year">2020</td><td data-label="Duration">90 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Documentaries</td></tr>
-            <tr><td data-label="Rank">2</td><td data-label="Title">My Little Pony: A New Generation</td><td data-label="Year">2021</td><td data-label="Duration">91 min</td><td data-label="Rating">PG</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">3</td><td data-label="Title">Sankofa</td><td data-label="Year">1993</td><td data-label="Duration">125 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, Independent Movies, International Movies</td></tr>
-            <tr><td data-label="Rank">4</td><td data-label="Title">The Starling</td><td data-label="Year">2021</td><td data-label="Duration">104 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Comedies, Dramas</td></tr>
-            <tr><td data-label="Rank">5</td><td data-label="Title">Je Suis Karl</td><td data-label="Year">2021</td><td data-label="Duration">127 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, International Movies</td></tr>
-            <tr><td data-label="Rank">6</td><td data-label="Title">Confessions of an Invisible Girl</td><td data-label="Year">2021</td><td data-label="Duration">91 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Children & Family Movies, Comedies</td></tr>
-            <tr><td data-label="Rank">7</td><td data-label="Title">Europe's Most Dangerous Man: Otto Skorzeny in Spain</td><td data-label="Year">2020</td><td data-label="Duration">67 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Documentaries, International Movies</td></tr>
-            <tr><td data-label="Rank">8</td><td data-label="Title">Intrusion</td><td data-label="Year">2021</td><td data-label="Duration">94 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Thrillers</td></tr>
-            <tr><td data-label="Rank">9</td><td data-label="Title">Avvai Shanmughi</td><td data-label="Year">1996</td><td data-label="Duration">161 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Comedies, International Movies</td></tr>
-            <tr><td data-label="Rank">10</td><td data-label="Title">Go! Go! Cory Carson: Chrissy Takes the Wheel</td><td data-label="Year">2021</td><td data-label="Duration">61 min</td><td data-label="Rating">TV-Y</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">11</td><td data-label="Title">Jeans</td><td data-label="Year">1998</td><td data-label="Duration">166 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Comedies, International Movies, Romantic Movies</td></tr>
-            <tr><td data-label="Rank">12</td><td data-label="Title">Minsara Kanavu</td><td data-label="Year">1997</td><td data-label="Duration">147 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Comedies, International Movies, Music & Musicals</td></tr>
-            <tr><td data-label="Rank">13</td><td data-label="Title">Grown Ups</td><td data-label="Year">2010</td><td data-label="Duration">103 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Comedies</td></tr>
-            <tr><td data-label="Rank">14</td><td data-label="Title">Dark Skies</td><td data-label="Year">2013</td><td data-label="Duration">97 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Horror Movies, Sci-Fi & Fantasy</td></tr>
-            <tr><td data-label="Rank">15</td><td data-label="Title">Paranoia</td><td data-label="Year">2013</td><td data-label="Duration">106 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Thrillers</td></tr>
-            <tr><td data-label="Rank">16</td><td data-label="Title">Ankahi Kahaniya</td><td data-label="Year">2021</td><td data-label="Duration">111 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Dramas, Independent Movies, International Movies</td></tr>
-            <tr><td data-label="Rank">17</td><td data-label="Title">The Father Who Moves Mountains</td><td data-label="Year">2021</td><td data-label="Duration">110 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, International Movies, Thrillers</td></tr>
-            <tr><td data-label="Rank">18</td><td data-label="Title">The Stronghold</td><td data-label="Year">2021</td><td data-label="Duration">105 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Action & Adventure, Dramas, International Movies</td></tr>
-            <tr><td data-label="Rank">19</td><td data-label="Title">Birth of the Dragon</td><td data-label="Year">2017</td><td data-label="Duration">96 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Action & Adventure, Dramas</td></tr>
-            <tr><td data-label="Rank">20</td><td data-label="Title">Jaws</td><td data-label="Year">1975</td><td data-label="Duration">124 min</td><td data-label="Rating">PG</td><td data-label="Genre">Action & Adventure, Classic Movies, Dramas</td></tr>
-            <tr><td data-label="Rank">21</td><td data-label="Title">Jaws 2</td><td data-label="Year">1978</td><td data-label="Duration">116 min</td><td data-label="Rating">PG</td><td data-label="Genre">Dramas, Horror Movies, Thrillers</td></tr>
-            <tr><td data-label="Rank">22</td><td data-label="Title">Jaws 3</td><td data-label="Year">1983</td><td data-label="Duration">98 min</td><td data-label="Rating">PG</td><td data-label="Genre">Action & Adventure, Horror Movies, Thrillers</td></tr>
-            <tr><td data-label="Rank">23</td><td data-label="Title">Jaws: The Revenge</td><td data-label="Year">1987</td><td data-label="Duration">91 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Action & Adventure, Horror Movies, Thrillers</td></tr>
-            <tr><td data-label="Rank">24</td><td data-label="Title">My Heroes Were Cowboys</td><td data-label="Year">2021</td><td data-label="Duration">23 min</td><td data-label="Rating">PG</td><td data-label="Genre">Documentaries</td></tr>
-            <tr><td data-label="Rank">25</td><td data-label="Title">Safe House</td><td data-label="Year">2012</td><td data-label="Duration">115 min</td><td data-label="Rating">R</td><td data-label="Genre">Action & Adventure</td></tr>
-            <tr><td data-label="Rank">26</td><td data-label="Title">Training Day</td><td data-label="Year">2001</td><td data-label="Duration">122 min</td><td data-label="Rating">R</td><td data-label="Genre">Dramas, Thrillers</td></tr>
-            <tr><td data-label="Rank">27</td><td data-label="Title">InuYasha the Movie 2: The Castle Beyond the Looking Glass</td><td data-label="Year">2002</td><td data-label="Duration">99 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">28</td><td data-label="Title">InuYasha the Movie 3: Swords of an Honorable Ruler</td><td data-label="Year">2003</td><td data-label="Duration">99 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">29</td><td data-label="Title">InuYasha the Movie 4: Fire on the Mystic Island</td><td data-label="Year">2004</td><td data-label="Duration">88 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">30</td><td data-label="Title">InuYasha the Movie: Affections Touching Across Time</td><td data-label="Year">2001</td><td data-label="Duration">100 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">31</td><td data-label="Title">Naruto Shippuden the Movie: Blood Prison</td><td data-label="Year">2011</td><td data-label="Duration">102 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">32</td><td data-label="Title">Naruto Shippûden the Movie: Bonds</td><td data-label="Year">2008</td><td data-label="Duration">93 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">33</td><td data-label="Title">Naruto Shippûden the Movie: The Will of Fire</td><td data-label="Year">2009</td><td data-label="Duration">96 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">34</td><td data-label="Title">Naruto Shippuden: The Movie</td><td data-label="Year">2007</td><td data-label="Duration">95 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">35</td><td data-label="Title">Naruto Shippuden: The Movie: The Lost Tower</td><td data-label="Year">2010</td><td data-label="Duration">85 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">36</td><td data-label="Title">Naruto the Movie 2: Legend of the Stone of Gelel</td><td data-label="Year">2005</td><td data-label="Duration">97 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">37</td><td data-label="Title">Naruto the Movie 3: Guardians of the Crescent Moon Kingdom</td><td data-label="Year">2006</td><td data-label="Duration">95 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">38</td><td data-label="Title">Naruto the Movie: Ninja Clash in the Land of Snow</td><td data-label="Year">2004</td><td data-label="Duration">83 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Action & Adventure, Anime Features, International Movies</td></tr>
-            <tr><td data-label="Rank">39</td><td data-label="Title">Nightbooks</td><td data-label="Year">2021</td><td data-label="Duration">103 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">40</td><td data-label="Title">Schumacher</td><td data-label="Year">2021</td><td data-label="Duration">113 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Documentaries, International Movies, Sports Movies</td></tr>
-            <tr><td data-label="Rank">41</td><td data-label="Title">A StoryBots Space Adventure</td><td data-label="Year">2021</td><td data-label="Duration">13 min</td><td data-label="Rating">TV-Y</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">42</td><td data-label="Title">King of Boys</td><td data-label="Year">2018</td><td data-label="Duration">182 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, International Movies</td></tr>
-            <tr><td data-label="Rank">43</td><td data-label="Title">You vs. Wild: Out Cold</td><td data-label="Year">2021</td><td data-label="Duration">106 min</td><td data-label="Rating">TV-G</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">44</td><td data-label="Title">Little Singham - Black Shadow</td><td data-label="Year">2021</td><td data-label="Duration">48 min</td><td data-label="Rating">TV-Y7</td><td data-label="Genre">Children & Family Movies, Comedies</td></tr>
-            <tr><td data-label="Rank">45</td><td data-label="Title">Tughlaq Durbar</td><td data-label="Year">2020</td><td data-label="Duration">145 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Comedies, Dramas, International Movies</td></tr>
-            <tr><td data-label="Rank">46</td><td data-label="Title">Tughlaq Durbar (Telugu)</td><td data-label="Year">2021</td><td data-label="Duration">145 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Comedies, Dramas, International Movies</td></tr>
-            <tr><td data-label="Rank">47</td><td data-label="Title">Firedrake the Silver Dragon</td><td data-label="Year">2021</td><td data-label="Duration">93 min</td><td data-label="Rating">TV-Y7</td><td data-label="Genre">Children & Family Movies</td></tr>
-            <tr><td data-label="Rank">48</td><td data-label="Title">Kate</td><td data-label="Year">2021</td><td data-label="Duration">106 min</td><td data-label="Rating">R</td><td data-label="Genre">Action & Adventure</td></tr>
-            <tr><td data-label="Rank">49</td><td data-label="Title">Omo Ghetto: the Saga</td><td data-label="Year">2020</td><td data-label="Duration">147 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Action & Adventure, Comedies, Dramas</td></tr>
-            <tr><td data-label="Rank">50</td><td data-label="Title">Prey</td><td data-label="Year">2021</td><td data-label="Duration">87 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">International Movies, Thrillers</td></tr>
-        </tbody>
+        <tbody><tr><td data-label="Poster"><img src="images/movie_1.png" alt="Dick Johnson Is Dead"></td><td data-label="Rank">1</td><td data-label="Title">Dick Johnson Is Dead</td><td data-label="Year">2020</td><td data-label="Duration">90 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Documentaries</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_2.png" alt="My Little Pony: A New Generation"></td><td data-label="Rank">2</td><td data-label="Title">My Little Pony: A New Generation</td><td data-label="Year">2021</td><td data-label="Duration">91 min</td><td data-label="Rating">PG</td><td data-label="Genre">Children & Family Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_3.png" alt="Sankofa"></td><td data-label="Rank">3</td><td data-label="Title">Sankofa</td><td data-label="Year">1993</td><td data-label="Duration">125 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, Independent Movies, International Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_4.png" alt="The Starling"></td><td data-label="Rank">4</td><td data-label="Title">The Starling</td><td data-label="Year">2021</td><td data-label="Duration">104 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Comedies, Dramas</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_5.png" alt="Je Suis Karl"></td><td data-label="Rank">5</td><td data-label="Title">Je Suis Karl</td><td data-label="Year">2021</td><td data-label="Duration">127 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Dramas, International Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_6.png" alt="Confessions of an Invisible Girl"></td><td data-label="Rank">6</td><td data-label="Title">Confessions of an Invisible Girl</td><td data-label="Year">2021</td><td data-label="Duration">91 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Children & Family Movies, Comedies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_7.png" alt="Europe's Most Dangerous Man: Otto Skorzeny in Spain"></td><td data-label="Rank">7</td><td data-label="Title">Europe's Most Dangerous Man: Otto Skorzeny in Spain</td><td data-label="Year">2020</td><td data-label="Duration">67 min</td><td data-label="Rating">TV-MA</td><td data-label="Genre">Documentaries, International Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_8.png" alt="Intrusion"></td><td data-label="Rank">8</td><td data-label="Title">Intrusion</td><td data-label="Year">2021</td><td data-label="Duration">94 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Thrillers</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_9.png" alt="Avvai Shanmughi"></td><td data-label="Rank">9</td><td data-label="Title">Avvai Shanmughi</td><td data-label="Year">1996</td><td data-label="Duration">161 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Comedies, International Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_10.png" alt="Go! Go! Cory Carson: Chrissy Takes the Wheel"></td><td data-label="Rank">10</td><td data-label="Title">Go! Go! Cory Carson: Chrissy Takes the Wheel</td><td data-label="Year">2021</td><td data-label="Duration">61 min</td><td data-label="Rating">TV-Y</td><td data-label="Genre">Children & Family Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_11.png" alt="Jeans"></td><td data-label="Rank">11</td><td data-label="Title">Jeans</td><td data-label="Year">1998</td><td data-label="Duration">166 min</td><td data-label="Rating">TV-14</td><td data-label="Genre">Comedies, International Movies, Romantic Movies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_12.png" alt="Minsara Kanavu"></td><td data-label="Rank">12</td><td data-label="Title">Minsara Kanavu</td><td data-label="Year">1997</td><td data-label="Duration">147 min</td><td data-label="Rating">TV-PG</td><td data-label="Genre">Comedies, International Movies, Music & Musicals</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_13.png" alt="Grown Ups"></td><td data-label="Rank">13</td><td data-label="Title">Grown Ups</td><td data-label="Year">2010</td><td data-label="Duration">103 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Comedies</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_14.png" alt="Dark Skies"></td><td data-label="Rank">14</td><td data-label="Title">Dark Skies</td><td data-label="Year">2013</td><td data-label="Duration">97 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Horror Movies, Sci-Fi & Fantasy</td></tr>
+<tr><td data-label="Poster"><img src="images/movie_15.png" alt="Paranoia"></td><td data-label="Rank">15</td><td data-label="Title">Paranoia</td><td data-label="Year">2013</td><td data-label="Duration">106 min</td><td data-label="Rating">PG-13</td><td data-label="Genre">Thrillers</td></tr></tbody>
     </table>
     </div>
 
-    <footer>
+    
+        <aside class="ads-sidebar">
+            <div class="ad-slot">
+                <p class="ad-label">Sponsored</p>
+                <img src="images/movie_16.png" alt="Featured Streaming Service">
+                <div class="ad-info">
+                    <h3>Stream New Releases</h3>
+                    <p>Get the best of IMDb originals and more.</p>
+                    <a href="#" class="ad-button">Watch Now</a>
+                </div>
+            </div>
+            <div class="ad-slot">
+                <p class="ad-label">Sponsored</p>
+                <img src="images/movie_17.png" alt="Upcoming Movie Trailer">
+                <div class="ad-info">
+                    <h3>Coming Soon</h3>
+                    <p>Exclusive first look at this summer's biggest blockbuster.</p>
+                    <a href="#" class="ad-button">Watch Trailer</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+<footer>
         <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>
         <p>Created by: Zvonimir Konjevic</p>
     </footer>

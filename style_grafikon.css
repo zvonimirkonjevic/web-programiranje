@@ -1,0 +1,205 @@
+/* Page Transition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-transition {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Chart Section */
+.chart-section {
+    background-color: var(--imdb-dark-gray);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.chart-section h2 {
+    color: var(--imdb-gold);
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* Bar Chart */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bar-label {
+    min-width: 130px;
+    font-size: 0.9rem;
+    color: var(--text-white);
+    font-weight: 600;
+    text-align: right;
+}
+
+.bar-track {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    height: 32px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: var(--bar-width);
+    background: linear-gradient(90deg, var(--imdb-gold), #fbd54e);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+    animation: growBar 1s ease-out forwards;
+    transform-origin: left;
+}
+
+@keyframes growBar {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.bar-value {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--imdb-black);
+}
+
+/* Form Section */
+.form-section {
+    background-color: var(--imdb-dark-gray);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+fieldset {
+    border: 1px solid var(--border-gray);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+legend {
+    color: var(--text-white);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0 10px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-row label {
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-row input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-family: var(--font-family);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-row input[type="text"]:focus {
+    outline: none;
+    border-color: var(--imdb-gold);
+    box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.2);
+}
+
+.btn-dalje {
+    display: inline-block;
+    background-color: var(--imdb-gold);
+    color: var(--imdb-black);
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: transform 0.2s, background-color 0.2s;
+    margin-bottom: 20px;
+}
+
+.btn-dalje:hover {
+    transform: translateY(-2px);
+    background-color: #fbd54e;
+}
+
+.select-row label {
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.select-row select {
+    padding: 10px 14px;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.select-row select:focus {
+    outline: none;
+    border-color: var(--imdb-gold);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .bar-label {
+        min-width: 90px;
+        font-size: 0.8rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-row input[type="text"] {
+        width: 100%;
+    }
+}

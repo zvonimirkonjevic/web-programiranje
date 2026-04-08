@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDb - Images Gallery</title>
+    <meta name="description" content="Browse stunning movie-related images in the IMDb image gallery.">
+    <meta name="keywords" content="movies, IMDb, images, gallery, cinema, posters">
+    <meta name="author" content="Zvonimir Konjevic">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="IMDb - Images Gallery">
+    <meta property="og:description" content="Browse stunning movie-related images in the IMDb image gallery.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/style_slike.css">
+</head>
+
+<body class="page-transition">
+    <nav>
+        <a href="index.html" class="logo">IMDb</a>
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <ul>
+            <li><a href="index.html">Movie list</a></li>
+            <li><a href="slike.html" class="active">Images page</a></li>
+            <li><a href="grafikon.html">Statistics page</a></li>
+        </ul>
+    </nav>
+    <h1>Image Gallery</h1>
+
+    <div class="gallery-grid">
+        <% images.forEach((image, index) => { %>
+        <a href="#img<%= index + 1 %>" class="gallery-item">
+            <img src="<%= image.url %>?w=600" alt="<%= image.alt %>">
+            <div class="gallery-caption"><%= image.title %></div>
+        </a>
+        <% }); %>
+    </div>
+
+    <!-- Lightbox overlays (pure CSS using :target) -->
+    <% images.forEach((image, index) => { %>
+    <div id="img<%= index + 1 %>" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="<%= image.url %>?w=1200" alt="<%= image.alt %>">
+    </div>
+    <% }); %>
+
+    <footer>
+        <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>
+        <p>Created by: Zvonimir Konjevic</p>
+    </footer>
+</body>
+
+</html>

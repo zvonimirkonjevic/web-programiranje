@@ -3,9 +3,12 @@ const app = express();
 const port = 3000;
 
 app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-    res.send("Hello, World!");
+app.get('/slike', (_req, res) => {
+    const dataPath = __dirname + '/data/images.json';
+    const images = JSON.parse(require('fs').readFileSync(dataPath, 'utf8'));
+    res.render('slike', { images });
 });
 
 app.listen(port, () => {

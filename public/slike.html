@@ -35,44 +35,82 @@
     </nav>
     <h1>Image Gallery</h1>
 
-    <div class="gallery-grid"></div>
+    <div class="gallery-grid">
+        <a href="#img1" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600" alt="Cinema hall with red seats">
+            <div class="gallery-caption">Cinema Hall</div>
+        </a>
+        <a href="#img2" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=600" alt="Film reel and clapperboard">
+            <div class="gallery-caption">Film Production</div>
+        </a>
+        <a href="#img3" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600" alt="Movie projector light">
+            <div class="gallery-caption">The Projector</div>
+        </a>
+        <a href="#img4" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?w=600" alt="Neon cinema sign">
+            <div class="gallery-caption">Neon Cinema</div>
+        </a>
+        <a href="#img5" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=600" alt="Camera filming scene">
+            <div class="gallery-caption">Behind the Scenes</div>
+        </a>
+        <a href="#img6" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600" alt="Movie theater screen">
+            <div class="gallery-caption">The Big Screen</div>
+        </a>
+        <a href="#img7" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=600" alt="Popcorn bucket">
+            <div class="gallery-caption">Movie Night</div>
+        </a>
+        <a href="#img8" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600" alt="Cinema audience">
+            <div class="gallery-caption">The Audience</div>
+        </a>
+        <a href="#img9" class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=600" alt="Film strip close up">
+            <div class="gallery-caption">Film Strip</div>
+        </a>
+    </div>
 
-    <!-- Lightbox overlays injected by gallery.js -->
-
-    <script>
-        async function loadGallery() {
-            const COUNT = 9;
-            const page = Math.floor(Math.random() * 20) + 1;
-            const response = await fetch(`https://picsum.photos/v2/list?limit=${COUNT}&page=${page}`);
-            const images = await response.json();
-
-            const grid = document.querySelector('.gallery-grid');
-            const footer = document.querySelector('footer');
-
-            images.forEach((image, index) => {
-                const id = index + 1;
-                const thumbUrl = `https://picsum.photos/id/${image.id}/600/400`;
-                const fullUrl = `https://picsum.photos/id/${image.id}/1200/800`;
-                const caption = image.author;
-
-                grid.insertAdjacentHTML('beforeend', `
-                    <a href="#img${id}" class="gallery-item">
-                        <img src="${thumbUrl}" alt="${caption}">
-                        <div class="gallery-caption">${caption}</div>
-                    </a>
-                `);
-
-                footer.insertAdjacentHTML('beforebegin', `
-                    <div id="img${id}" class="lightbox">
-                        <a href="#" class="lightbox-close">&times;</a>
-                        <img src="${fullUrl}" alt="${caption}">
-                    </div>
-                `);
-            });
-        }
-
-        loadGallery();
-    </script>
+    <!-- Lightbox overlays (pure CSS using :target) -->
+    <div id="img1" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200" alt="Cinema hall with red seats">
+    </div>
+    <div id="img2" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=1200" alt="Film reel and clapperboard">
+    </div>
+    <div id="img3" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200" alt="Movie projector light">
+    </div>
+    <div id="img4" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?w=1200" alt="Neon cinema sign">
+    </div>
+    <div id="img5" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1200" alt="Camera filming scene">
+    </div>
+    <div id="img6" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200" alt="Movie theater screen">
+    </div>
+    <div id="img7" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=1200" alt="Popcorn bucket">
+    </div>
+    <div id="img8" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1200" alt="Cinema audience">
+    </div>
+    <div id="img9" class="lightbox">
+        <a href="#" class="lightbox-close">&times;</a>
+        <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=1200" alt="Film strip close up">
+    </div>
 
     <footer>
         <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>

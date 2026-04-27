@@ -39,6 +39,25 @@
         </ul>
     </nav>
     <h1>IMDb Top 50 Movies</h1>
+    <section class="filters">
+        <div class="filter-group">
+            <label for="filter-text">Search title</label>
+            <input type="text" id="filter-text" placeholder="e.g. Dark…">
+        </div>
+        <div class="filter-group">
+            <label for="filter-year">From year: <span id="year-value">—</span></label>
+            <input type="range" id="filter-year" min="1900" max="2021" value="1900">
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Audience</span>
+            <div class="radio-group">
+                <label><input type="radio" name="filter-rating" value="all" checked> All</label>
+                <label><input type="radio" name="filter-rating" value="kids"> Kids</label>
+                <label><input type="radio" name="filter-rating" value="teen"> Teen</label>
+                <label><input type="radio" name="filter-rating" value="adult"> Adult</label>
+            </div>
+        </div>
+    </section>
     <div class="content-wrapper">
 
     <div class="table-container">

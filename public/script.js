@@ -7,7 +7,7 @@ function parseYear(str) {
 function renderMovies(movies) {
     const tbody = document.querySelector('table tbody');
     if (movies.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-gray);padding:30px;">No movies match your filters.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-gray);padding:30px;">No movies match your filters.</td></tr>';
         return;
     }
     tbody.innerHTML = movies.map((movie, index) => {
@@ -23,6 +23,9 @@ function renderMovies(movies) {
             <td data-label="Duration">${duration}</td>
             <td data-label="Rating">${movie.rating}</td>
             <td data-label="Genre">${movie.listed_in}</td>
+            <td data-label="Watchlist">
+                <button class="btn-watchlist" data-img="${movie._imgIndex}">+ Watch</button>
+            </td>
         </tr>`;
     }).join('');
 }
@@ -47,6 +50,61 @@ function applyFilters() {
 
     renderMovies(filtered);
 }
+
+const watchlist = new Set();
+
+function addMoviesToWatchlist() {
+    const container = document.getElementById('watchlist-items');
+    const empty = document.getElementById('watchlist-empty');
+    const count = document.getElementById('watchlist-count');
+
+    count.textContent = watchlist.size ? `(${watchlist.size})` : '';
+
+    if (watchlist.size === 0) {
+        container.innerHTML = '';
+        empty.hidden = false;
+        return;
+    }
+    empty.hidden = true;
+    container.innerHTML = Array.from(watchlist).map(imgIndex => {
+        const movie = allMovies.find(m => m._imgIndex == imgIndex);
+        return `<li class="watchlist-item">
+            <img src="images/movie_${movie._imgIndex}.png" alt="${movie.title}">
+            <div class="watchlist-item-info">
+                <span class="watchlist-item-title">${movie.title}</span>
+                <span class="watchlist-item-meta">${movie.release_year} · ${movie.rating}</span>
+            </div>
+            <button class="btn-watched" data-remove="${movie._imgIndex}" title="Mark as watched">✓</button>
+        </li>`;
+    }).join('');
+}
+
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('btn-watchlist')) {
+        const imgIndex = e.target.getAttribute('data-img');
+        if (watchlist.has(imgIndex)) {
+            watchlist.delete(imgIndex);
+            e.target.textContent = '+ Watch';
+            e.target.classList.remove('btn-watchlist--added');
+        } else {
+            watchlist.add(imgIndex);
+            e.target.textContent = '✓ Saved';
+            e.target.classList.add('btn-watchlist--added');
+        }
+        addMoviesToWatchlist();
+    }
+
+    if (e.target.classList.contains('btn-watched')) {
+        const imgIndex = e.target.getAttribute('data-remove');
+        watchlist.delete(imgIndex);
+        const tableBtn = document.querySelector(`.btn-watchlist[data-img="${imgIndex}"]`);
+        if (tableBtn) {
+            tableBtn.textContent = '+ Watch';
+            tableBtn.classList.remove('btn-watchlist--added');
+        }
+        addMoviesToWatchlist();
+    }
+});
 
 fetch('/data/netflix_titles.csv')
     .then(res => res.text())
@@ -79,4 +137,5 @@ fetch('/data/netflix_titles.csv')
         document.querySelectorAll('input[name="filter-rating"]').forEach(r => r.addEventListener('change', applyFilters));
 
         renderMovies(allMovies);
+        addMoviesToWatchlist();
     });

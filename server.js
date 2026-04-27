@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.static('public'));
+app.use('/data', express.static('data'));
 app.set('view engine', 'ejs');
 
 app.get('/slike', (_req, res) => {

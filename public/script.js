@@ -12,7 +12,7 @@ function renderMovies(movies) {
     }
     tbody.innerHTML = movies.map((movie, index) => {
         const rank = index + 1;
-        const title = movie.title.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        const title = movie.title;
         const year = parseYear(movie.release_year);
         const duration = parseInt(movie.duration) || 'N/A';
         return `<tr>

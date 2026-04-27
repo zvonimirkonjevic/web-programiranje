@@ -88,7 +88,7 @@ document.addEventListener('click', e => {
             e.target.classList.remove('btn-watchlist--added');
         } else {
             watchlist.add(imgIndex);
-            e.target.textContent = '✓ Saved';
+            e.target.textContent = 'Remove';
             e.target.classList.add('btn-watchlist--added');
         }
         addMoviesToWatchlist();

@@ -19,7 +19,7 @@ fetch('/data/netflix_titles.csv')
                 <td data-label="Rank">${rank}</td>
                 <td data-label="Title">${title}</td>
                 <td data-label="Year">${new Date(movie.release_year).getFullYear()}</td>
-                <td data-label="Duration">${movie.duration}</td>
+                <td data-label="Duration">${new Number(movie.duration.replace(" min", "")) || 'N/A'}</td>
                 <td data-label="Rating">${movie.rating}</td>
                 <td data-label="Genre">${movie.listed_in}</td>
             </tr>`;

@@ -328,6 +328,124 @@ table img {
     cursor: pointer;
 }
 
+/* Watchlist panel */
+.watchlist-panel {
+    background-color: var(--imdb-dark-gray);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.watchlist-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--imdb-gold);
+    margin-bottom: 16px;
+}
+
+#watchlist-count {
+    font-weight: 400;
+    color: var(--text-gray);
+}
+
+.watchlist-empty {
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    text-align: center;
+    padding: 16px 0;
+}
+
+#watchlist-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.watchlist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.watchlist-item img {
+    width: 36px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--border-gray);
+    flex-shrink: 0;
+}
+
+.watchlist-item-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.watchlist-item-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.watchlist-item-meta {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
+
+.btn-watched {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid var(--border-gray);
+    border-radius: 50%;
+    color: var(--text-gray);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-watched:hover {
+    background-color: #1a3a1a;
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+/* Watchlist toggle button in table rows */
+.btn-watchlist {
+    background: none;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    color: var(--text-gray);
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-watchlist:hover {
+    border-color: var(--imdb-gold);
+    color: var(--imdb-gold);
+}
+
+.btn-watchlist--added {
+    border-color: var(--imdb-gold);
+    color: var(--imdb-gold);
+    background-color: rgba(245, 197, 24, 0.08);
+}
+
 /* Footer */
 footer {
     padding: 30px 0;

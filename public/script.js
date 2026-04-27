@@ -137,5 +137,4 @@ fetch('/data/netflix_titles.csv')
         document.querySelectorAll('input[name="filter-rating"]').forEach(r => r.addEventListener('change', applyFilters));
 
         renderMovies(allMovies);
-        addMoviesToWatchlist();
     });

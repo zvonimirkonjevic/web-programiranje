@@ -1,7 +1,10 @@
+const PHP_API = 'http://localhost:8080';
+const IMAGE_COUNT = 17;
+
 let allMovies = [];
 
-function parseYear(str) {
-    return parseInt(str, 10);
+function imgIndex(movieId) {
+    return ((movieId - 1) % IMAGE_COUNT) + 1;
 }
 
 function renderMovies(movies) {
@@ -12,19 +15,17 @@ function renderMovies(movies) {
     }
     tbody.innerHTML = movies.map((movie, index) => {
         const rank = index + 1;
-        const title = movie.title;
-        const year = parseYear(movie.release_year);
-        const duration = parseInt(movie.duration) || 'N/A';
+        const img  = imgIndex(movie.id);
         return `<tr>
-            <td data-label="Poster"><img src="images/movie_${movie._imgIndex}.png" alt="${title}"></td>
+            <td data-label="Poster"><img src="images/movie_${img}.png" alt="${movie.title}"></td>
             <td data-label="Rank">${rank}</td>
-            <td data-label="Title">${title}</td>
-            <td data-label="Year">${year}</td>
-            <td data-label="Duration">${duration}</td>
+            <td data-label="Title">${movie.title}</td>
+            <td data-label="Year">${movie.release_year}</td>
+            <td data-label="Duration">${movie.duration_min}</td>
             <td data-label="Rating">${movie.rating}</td>
-            <td data-label="Genre">${movie.listed_in}</td>
+            <td data-label="Genre">${movie.genre}</td>
             <td data-label="Watchlist">
-                <button class="btn-watchlist" data-img="${movie._imgIndex}">+ Watch</button>
+                <button class="btn-watchlist" data-img="${img}" data-id="${movie.id}">+ Watch</button>
             </td>
         </tr>`;
     }).join('');
@@ -43,7 +44,7 @@ function applyFilters() {
 
     const filtered = allMovies.filter(movie => {
         if (!movie.title.toLowerCase().includes(text)) return false;
-        if (parseYear(movie.release_year) < minYear) return false;
+        if (movie.release_year < minYear) return false;
         if (ratingGroup !== 'all' && !ratingMap[ratingGroup].has(movie.rating)) return false;
         return true;
     });
@@ -66,28 +67,29 @@ function addMoviesToWatchlist() {
         return;
     }
     empty.hidden = true;
-    container.innerHTML = Array.from(watchlist).map(imgIndex => {
-        const movie = allMovies.find(m => m._imgIndex == imgIndex);
+    container.innerHTML = Array.from(watchlist).map(id => {
+        const movie = allMovies.find(m => m.id == id);
+        const img = imgIndex(movie.id);
         return `<li class="watchlist-item">
-            <img src="images/movie_${movie._imgIndex}.png" alt="${movie.title}">
+            <img src="images/movie_${img}.png" alt="${movie.title}">
             <div class="watchlist-item-info">
                 <span class="watchlist-item-title">${movie.title}</span>
                 <span class="watchlist-item-meta">${movie.release_year} · ${movie.rating}</span>
             </div>
-            <button class="btn-watched" data-remove="${movie._imgIndex}" title="Mark as watched">✓</button>
+            <button class="btn-watched" data-remove="${movie.id}" title="Mark as watched">✓</button>
         </li>`;
     }).join('');
 }
 
 document.addEventListener('click', e => {
     if (e.target.classList.contains('btn-watchlist')) {
-        const imgIndex = e.target.getAttribute('data-img');
-        if (watchlist.has(imgIndex)) {
-            watchlist.delete(imgIndex);
+        const id = e.target.getAttribute('data-id');
+        if (watchlist.has(id)) {
+            watchlist.delete(id);
             e.target.textContent = '+ Watch';
             e.target.classList.remove('btn-watchlist--added');
         } else {
-            watchlist.add(imgIndex);
+            watchlist.add(id);
             e.target.textContent = 'Remove';
             e.target.classList.add('btn-watchlist--added');
         }
@@ -95,9 +97,9 @@ document.addEventListener('click', e => {
     }
 
     if (e.target.classList.contains('btn-watched')) {
-        const imgIndex = e.target.getAttribute('data-remove');
-        watchlist.delete(imgIndex);
-        const tableBtn = document.querySelector(`.btn-watchlist[data-img="${imgIndex}"]`);
+        const id = e.target.getAttribute('data-remove');
+        watchlist.delete(id);
+        const tableBtn = document.querySelector(`.btn-watchlist[data-id="${id}"]`);
         if (tableBtn) {
             tableBtn.textContent = '+ Watch';
             tableBtn.classList.remove('btn-watchlist--added');
@@ -106,20 +108,12 @@ document.addEventListener('click', e => {
     }
 });
 
-fetch('/data/netflix_titles.csv')
-    .then(res => res.text())
-    .then(csv => {
-        const result = Papa.parse(csv, {
-            header: true,
-            skipEmptyLines: true
-        });
+fetch(`${PHP_API}/api/movies.php`)
+    .then(res => res.json())
+    .then(data => {
+        allMovies = data.movies;
 
-        allMovies = result.data
-            .filter(row => row.type === 'Movie')
-            .slice(0, 17)
-            .map((movie, index) => ({ ...movie, _imgIndex: index + 1 }));
-
-        const years = allMovies.map(m => parseYear(m.release_year)).filter(y => !isNaN(y));
+        const years = allMovies.map(m => m.release_year);
         const minYear = Math.min(...years);
         const maxYear = Math.max(...years);
 
@@ -137,4 +131,8 @@ fetch('/data/netflix_titles.csv')
         document.querySelectorAll('input[name="filter-rating"]').forEach(r => r.addEventListener('change', applyFilters));
 
         renderMovies(allMovies);
+    })
+    .catch(() => {
+        document.querySelector('table tbody').innerHTML =
+            '<tr><td colspan="8" style="text-align:center;color:#e05252;padding:30px;">Could not load movies. Is the PHP server running?</td></tr>';
     });

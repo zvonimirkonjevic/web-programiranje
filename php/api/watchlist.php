@@ -26,12 +26,18 @@ $userId = (int) getSessionUser()['id'];
 $method = $_SERVER['REQUEST_METHOD'];
 $pdo    = getDbConnection();
 
-// ── GET — return all movie IDs in this user's watchlist ─────────────────────
+// ── GET — return full movie objects for this user's watchlist ────────────────
 if ($method === 'GET') {
-    $stmt = $pdo->prepare('SELECT movie_id FROM watchlists WHERE user_id = ? ORDER BY created_at ASC');
+    $stmt = $pdo->prepare(
+        'SELECT m.id, m.title, m.director, m.release_year, m.duration_min, m.rating, m.genre, m.country, m.description
+         FROM watchlists w
+         JOIN movies m ON m.id = w.movie_id
+         WHERE w.user_id = ?
+         ORDER BY w.created_at ASC'
+    );
     $stmt->execute([$userId]);
-    $ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    echo json_encode(['movie_ids' => array_map('intval', $ids)]);
+    $movies = $stmt->fetchAll();
+    echo json_encode(['movies' => $movies]);
     exit;
 }
 

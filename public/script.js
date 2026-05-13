@@ -100,6 +100,7 @@ async function checkAuth() {
             currentUser = data.user;
             document.getElementById('nav-login').style.display = 'none';
             document.getElementById('nav-dashboard').style.display = '';
+            document.getElementById('nav-library').style.display = '';
         }
     } catch (_) {}
 }
@@ -113,7 +114,7 @@ async function loadWatchlistFromDb() {
         const res = await fetch(`${PHP_API}/api/watchlist.php`, { credentials: 'include' });
         if (!res.ok) return;
         const data = await res.json();
-        data.movie_ids.forEach(id => watchlist.add(String(id)));
+        data.movies.forEach(m => watchlist.add(String(m.id)));
     } catch (_) {}
 }
 

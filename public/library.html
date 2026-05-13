@@ -101,6 +101,8 @@
         .alert-error { background: rgba(224,82,82,0.15); border: 1px solid #e05252; color: #e05252; }
         .loading { text-align: center; color: var(--text-gray); margin: 60px auto; }
         footer { text-align: center; color: var(--text-gray); font-size: 0.8rem; margin-top: 40px; }
+        .score-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.82rem; font-weight:700; background:rgba(87,153,239,0.15); color:var(--imdb-blue); }
+        .score-badge.score-low { background:rgba(224,82,82,0.15); color:#e05252; }
     </style>
 </head>
 <body>
@@ -138,6 +140,7 @@
                     <th>Year</th>
                     <th>Duration (min)</th>
                     <th>Rating</th>
+                    <th>Score</th>
                     <th>Genre</th>
                     <th>Country</th>
                     <th></th>
@@ -185,14 +188,18 @@
             updateCount();
             return;
         }
+        const LOW = 5.0;
         tbody.innerHTML = movieList.map(movie => {
             const img = imgIndex(movie.id);
+            const score = parseFloat(movie.score ?? 0);
+            const scoreCls = score < LOW ? 'score-low' : '';
             return `<tr data-id="${movie.id}">
                 <td><img src="images/movie_${img}.png" alt="${movie.title}"></td>
                 <td class="col-title">${movie.title}</td>
                 <td>${movie.release_year}</td>
                 <td>${movie.duration_min}</td>
                 <td>${movie.rating}</td>
+                <td><span class="score-badge ${scoreCls}">${score.toFixed(1)}</span></td>
                 <td class="col-genre">${movie.genre}</td>
                 <td>${movie.country || '—'}</td>
                 <td>

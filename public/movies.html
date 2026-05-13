@@ -193,6 +193,8 @@
         footer { text-align: center; color: var(--text-gray); font-size: 0.8rem; margin-top: 40px; }
 
         select option { background: #1a1a1a; }
+        .score-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.82rem; font-weight:700; background:rgba(87,153,239,0.15); color:var(--imdb-blue); }
+        .score-badge.score-low { background:rgba(224,82,82,0.15); color:#e05252; }
     </style>
 </head>
 <body>
@@ -232,6 +234,7 @@
                     <th>Year</th>
                     <th>Duration</th>
                     <th>Rating</th>
+                    <th>Score</th>
                     <th>Genre</th>
                     <th>Country</th>
                     <th>Description</th>
@@ -308,10 +311,17 @@
                 </div>
             </div>
 
-            <div class="form-group" id="fg-country">
-                <label for="f-country">Country</label>
-                <input type="text" id="f-country" maxlength="255" placeholder="e.g. United States, Germany">
-                <div class="field-error" id="err-country"></div>
+            <div class="form-row">
+                <div class="form-group" id="fg-country">
+                    <label for="f-country">Country</label>
+                    <input type="text" id="f-country" maxlength="255" placeholder="e.g. United States, Germany">
+                    <div class="field-error" id="err-country"></div>
+                </div>
+                <div class="form-group" id="fg-score">
+                    <label for="f-score">Score (0.0 – 10.0)</label>
+                    <input type="number" id="f-score" min="0" max="10" step="0.1" placeholder="e.g. 7.5">
+                    <div class="field-error" id="err-score"></div>
+                </div>
             </div>
 
             <div class="form-group" id="fg-description">
@@ -369,6 +379,7 @@ function openModal(movie = null) {
         document.getElementById('f-rating').value          = movie.rating;
         document.getElementById('f-genre').value           = movie.genre;
         document.getElementById('f-country').value         = movie.country;
+        document.getElementById('f-score').value           = movie.score ?? '';
         document.getElementById('f-description').value     = movie.description;
     } else {
         document.getElementById('modal-title').textContent = 'Add movie';
@@ -382,6 +393,8 @@ function closeModal() {
 }
 
 function buildRow(movie) {
+    const score = parseFloat(movie.score ?? 0);
+    const scoreCls = score < 5.0 ? 'score-low' : '';
     const tr = document.createElement('tr');
     tr.id = `row-${movie.id}`;
     tr.innerHTML = `
@@ -391,6 +404,7 @@ function buildRow(movie) {
         <td>${movie.release_year}</td>
         <td>${movie.duration_min} min</td>
         <td>${escHtml(movie.rating)}</td>
+        <td><span class="score-badge ${scoreCls}">${score.toFixed(1)}</span></td>
         <td>${escHtml(movie.genre)}</td>
         <td>${escHtml(movie.country || '—')}</td>
         <td class="col-desc" title="${escHtml(movie.description)}">${escHtml(movie.description)}</td>
@@ -462,6 +476,7 @@ document.getElementById('movie-form').addEventListener('submit', async (e) => {
         rating:       document.getElementById('f-rating').value,
         genre:        document.getElementById('f-genre').value.trim(),
         country:      document.getElementById('f-country').value.trim(),
+        score:        document.getElementById('f-score').value,
         description:  document.getElementById('f-description').value.trim(),
     };
     if (id) payload.id = parseInt(id);

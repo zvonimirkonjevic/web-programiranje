@@ -1,5 +1,6 @@
 const PHP_API = 'http://localhost:8080';
 const IMAGE_COUNT = 17;
+const LOW_RATING_THRESHOLD = 5.0;
 
 let allMovies = [];
 let sortDir = 'asc';
@@ -9,17 +10,89 @@ function imgIndex(movieId) {
     return ((movieId - 1) % IMAGE_COUNT) + 1;
 }
 
+// ── Low-rating warning banner ─────────────────────────────────────────────────
+
+function showLowRatingBanner(title, score) {
+    let banner = document.getElementById('low-rating-banner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'low-rating-banner';
+        banner.className = 'low-rating-banner';
+        document.querySelector('.filters')?.insertAdjacentElement('afterend', banner)
+            ?? document.body.prepend(banner);
+    }
+    banner.innerHTML = `
+        <strong>Low Rating Warning</strong> — "${title}" has a score of
+        <strong>${score}/10</strong>, which is below our recommended threshold of
+        ${LOW_RATING_THRESHOLD}. It has been added to your library.
+        <button class="low-rating-banner-close" onclick="this.parentElement.remove()">&#x2715;</button>
+    `;
+    banner.style.display = 'flex';
+
+    clearTimeout(banner._timer);
+    banner._timer = setTimeout(() => banner.remove(), 7000);
+}
+
+// ── Low-rating confirmation modal ─────────────────────────────────────────────
+
+function showLowRatingModal(movie, onConfirm) {
+    let backdrop = document.getElementById('low-rating-modal-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'low-rating-modal-backdrop';
+        backdrop.className = 'low-rating-modal-backdrop';
+        backdrop.innerHTML = `
+            <div class="low-rating-modal" role="dialog" aria-modal="true">
+                <div class="low-rating-modal-icon">&#9888;</div>
+                <h2 class="low-rating-modal-title">Low Rating Warning</h2>
+                <p class="low-rating-modal-body" id="low-rating-modal-body"></p>
+                <div class="low-rating-modal-actions">
+                    <button class="low-rating-btn-cancel" id="low-rating-cancel">Cancel</button>
+                    <button class="low-rating-btn-confirm" id="low-rating-confirm">Add anyway</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(backdrop);
+    }
+
+    document.getElementById('low-rating-modal-body').innerHTML =
+        `"<strong>${movie.title}</strong>" has a score of <strong>${parseFloat(movie.score).toFixed(1)}/10</strong>,`
+        + ` which is below our recommended threshold of ${LOW_RATING_THRESHOLD}.<br><br>`
+        + `Are you sure you want to add it to your library?`;
+
+    backdrop.style.display = 'flex';
+
+    const cancelBtn  = document.getElementById('low-rating-cancel');
+    const confirmBtn = document.getElementById('low-rating-confirm');
+
+    function close() {
+        backdrop.style.display = 'none';
+        cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+        confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+    }
+
+    document.getElementById('low-rating-cancel').addEventListener('click', close, { once: true });
+    document.getElementById('low-rating-confirm').addEventListener('click', () => {
+        close();
+        onConfirm();
+    }, { once: true });
+}
+
+// ── Movie rendering ───────────────────────────────────────────────────────────
+
 function renderMovies(movies) {
     const tbody = document.querySelector('table tbody');
     document.getElementById('results-info').textContent =
         movies.length === 0 ? '' : `Showing ${movies.length} result${movies.length === 1 ? '' : 's'}`;
 
     if (movies.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-gray);padding:30px;">No movies match your filters.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-gray);padding:30px;">No movies match your filters.</td></tr>';
         return;
     }
     tbody.innerHTML = movies.map((movie, index) => {
         const img = imgIndex(movie.id);
+        const score = parseFloat(movie.score ?? 0);
+        const scoreCls = score < LOW_RATING_THRESHOLD ? 'score-low' : '';
         return `<tr>
             <td data-label="Poster"><img src="images/movie_${img}.png" alt="${movie.title}"></td>
             <td data-label="Rank">${index + 1}</td>
@@ -27,6 +100,7 @@ function renderMovies(movies) {
             <td data-label="Year">${movie.release_year}</td>
             <td data-label="Duration">${movie.duration_min}</td>
             <td data-label="Rating">${movie.rating}</td>
+            <td data-label="Score"><span class="score-badge ${scoreCls}">${score.toFixed(1)}</span></td>
             <td data-label="Genre">${movie.genre}</td>
             <td data-label="Country">${movie.country || '—'}</td>
             <td data-label="Watchlist">
@@ -74,11 +148,10 @@ async function fetchMovies() {
         renderMovies(allMovies);
     } catch (_) {
         document.querySelector('table tbody').innerHTML =
-            '<tr><td colspan="9" style="text-align:center;color:#e05252;padding:30px;">Could not load movies. Is the PHP server running?</td></tr>';
+            '<tr><td colspan="10" style="text-align:center;color:#e05252;padding:30px;">Could not load movies. Is the PHP server running?</td></tr>';
     }
 }
 
-// Debounce for title text input.
 let debounceTimer;
 function onFilterChange() {
     clearTimeout(debounceTimer);
@@ -89,7 +162,7 @@ function onImmediateFilterChange() {
     fetchMovies();
 }
 
-// ── Auth ─────────────────────────────────────────────────────────────────────
+// ── Auth ──────────────────────────────────────────────────────────────────────
 
 async function checkAuth() {
     try {
@@ -119,12 +192,13 @@ async function loadWatchlistFromDb() {
 }
 
 async function addToWatchlistDb(movieId) {
-    await fetch(`${PHP_API}/api/watchlist.php`, {
+    const res = await fetch(`${PHP_API}/api/watchlist.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ movie_id: parseInt(movieId) }),
     });
+    return res.json();
 }
 
 async function removeFromWatchlistDb(movieId) {
@@ -159,14 +233,27 @@ function renderWatchlistSidebar() {
                 <span class="watchlist-item-title">${movie.title}</span>
                 <span class="watchlist-item-meta">${movie.release_year} · ${movie.rating}</span>
             </div>
-            <button class="btn-watched" data-remove="${movie.id}" title="Mark as watched">✓</button>
+            <button class="btn-watched" data-remove="${movie.id}" title="Mark as watched">&#x2713;</button>
         </li>`;
     }).join('');
 }
 
+async function doAddToWatchlist(id, btn) {
+    watchlist.add(id);
+    btn.textContent = 'Remove';
+    btn.classList.add('btn-watchlist--added');
+    renderWatchlistSidebar();
+
+    const data = await addToWatchlistDb(id);
+    if (data.low_rating_warning) {
+        showLowRatingBanner(data.title, data.score);
+    }
+}
+
 document.addEventListener('click', async e => {
     if (e.target.classList.contains('btn-watchlist')) {
-        const id = e.target.getAttribute('data-id');
+        const id  = e.target.getAttribute('data-id');
+        const btn = e.target;
 
         if (!currentUser) {
             window.location.href = 'login.html';
@@ -175,16 +262,19 @@ document.addEventListener('click', async e => {
 
         if (watchlist.has(id)) {
             watchlist.delete(id);
-            e.target.textContent = '+ Watch';
-            e.target.classList.remove('btn-watchlist--added');
+            btn.textContent = '+ Watch';
+            btn.classList.remove('btn-watchlist--added');
             await removeFromWatchlistDb(id);
-        } else {
-            watchlist.add(id);
-            e.target.textContent = 'Remove';
-            e.target.classList.add('btn-watchlist--added');
-            await addToWatchlistDb(id);
+            renderWatchlistSidebar();
+            return;
         }
-        renderWatchlistSidebar();
+
+        const movie = allMovies.find(m => String(m.id) === id);
+        if (movie && parseFloat(movie.score) < LOW_RATING_THRESHOLD) {
+            showLowRatingModal(movie, () => doAddToWatchlist(id, btn));
+        } else {
+            await doAddToWatchlist(id, btn);
+        }
     }
 
     if (e.target.classList.contains('btn-watched')) {
@@ -209,7 +299,6 @@ async function init() {
         await loadWatchlistFromDb();
     }
 
-    // Populate genre and country dropdowns from server.
     try {
         const res = await fetch(`${PHP_API}/api/movies.php?meta=1`);
         const { genres, countries } = await res.json();
@@ -231,7 +320,6 @@ async function init() {
 
     await fetchMovies();
 
-    // Wire up filters.
     document.getElementById('filter-title').addEventListener('input', onFilterChange);
     document.getElementById('filter-genre').addEventListener('change', onImmediateFilterChange);
     document.getElementById('filter-year-from').addEventListener('input', onFilterChange);

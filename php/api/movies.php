@@ -75,7 +75,7 @@ if ($method === 'GET') {
     $sortBy  = in_array($_GET['sort_by'] ?? '', $allowedSort, true) ? $_GET['sort_by'] : 'id';
     $sortDir = ($_GET['sort_dir'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
 
-    $sql = 'SELECT id, title, director, release_year, duration_min, rating, genre, country, description FROM movies';
+    $sql = 'SELECT id, title, director, release_year, duration_min, rating, genre, country, description, score FROM movies';
     if ($where) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
     }
@@ -109,8 +109,8 @@ if ($method === 'POST') {
 
     $pdo  = getDbConnection();
     $stmt = $pdo->prepare(
-        'INSERT INTO movies (title, director, release_year, duration_min, rating, genre, country, description)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO movies (title, director, release_year, duration_min, rating, genre, country, description, score)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         trim($body['title']),
@@ -121,6 +121,7 @@ if ($method === 'POST') {
         trim($body['genre']),
         trim($body['country'] ?? ''),
         trim($body['description'] ?? ''),
+        (float) ($body['score'] ?? 0.0),
     ]);
 
     $id   = (int) $pdo->lastInsertId();
@@ -151,7 +152,7 @@ if ($method === 'PATCH') {
     $pdo  = getDbConnection();
     $stmt = $pdo->prepare(
         'UPDATE movies
-         SET title = ?, director = ?, release_year = ?, duration_min = ?, rating = ?, genre = ?, country = ?, description = ?
+         SET title = ?, director = ?, release_year = ?, duration_min = ?, rating = ?, genre = ?, country = ?, description = ?, score = ?
          WHERE id = ?'
     );
     $stmt->execute([
@@ -163,6 +164,7 @@ if ($method === 'PATCH') {
         trim($body['genre']),
         trim($body['country'] ?? ''),
         trim($body['description'] ?? ''),
+        (float) ($body['score'] ?? 0.0),
         $id,
     ]);
 
@@ -258,6 +260,14 @@ function validateMovie(array $data): array
     $description = trim($data['description'] ?? '');
     if (strlen($description) > 2000) {
         $errors['description'] = 'Description must be 2000 characters or fewer.';
+    }
+
+    $score = $data['score'] ?? '';
+    if ($score !== '' && $score !== null) {
+        $scoreVal = (float) $score;
+        if ($scoreVal < 0.0 || $scoreVal > 10.0) {
+            $errors['score'] = 'Score must be between 0.0 and 10.0.';
+        }
     }
 
     return $errors;

@@ -52,9 +52,10 @@ if ($movieId <= 0) {
 
 // ── POST — add movie to watchlist ────────────────────────────────────────────
 if ($method === 'POST') {
-    $check = $pdo->prepare('SELECT id FROM movies WHERE id = ?');
+    $check = $pdo->prepare('SELECT id, title, score FROM movies WHERE id = ?');
     $check->execute([$movieId]);
-    if (!$check->fetch()) {
+    $movie = $check->fetch();
+    if (!$movie) {
         http_response_code(404);
         echo json_encode(['error' => 'Movie not found.']);
         exit;
@@ -63,8 +64,30 @@ if ($method === 'POST') {
     $stmt = $pdo->prepare('INSERT IGNORE INTO watchlists (user_id, movie_id) VALUES (?, ?)');
     $stmt->execute([$userId, $movieId]);
 
+    $lowRating = (float) $movie['score'] < 5.0;
+
+    // Optional email notification for low-rated movies.
+    if ($lowRating) {
+        $user    = getSessionUser();
+        $to      = $user['email'];
+        $subject = 'Low-rated movie added to your library';
+        $msgBody = "Hi {$user['username']},\r\n\r\n"
+            . "You just added \"{$movie['title']}\" to your library.\r\n"
+            . "This movie has a score of {$movie['score']}/10, which is below the recommended threshold of 5.0.\r\n\r\n"
+            . "You can review your library at: http://localhost:3000/library.html\r\n\r\n"
+            . "IMDb App";
+        $headers = "From: noreply@imdb-app.local\r\nContent-Type: text/plain; charset=UTF-8";
+        @mail($to, $subject, $msgBody, $headers);
+    }
+
+    // low_rating_warning tells the frontend to display the red warning box.
     http_response_code(201);
-    echo json_encode(['message' => 'Added to watchlist.']);
+    echo json_encode([
+        'message'            => 'Added to watchlist.',
+        'low_rating_warning' => $lowRating,
+        'score'              => (float) $movie['score'],
+        'title'              => $movie['title'],
+    ]);
     exit;
 }
 

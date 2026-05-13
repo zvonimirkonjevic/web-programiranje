@@ -20,12 +20,72 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET — public, no auth required ──────────────────────────────────────────
 if ($method === 'GET') {
-    $pdo  = getDbConnection();
-    $stmt = $pdo->query(
-        'SELECT id, title, director, release_year, duration_min, rating, genre, description
-         FROM movies ORDER BY id ASC'
-    );
-    echo json_encode(['movies' => $stmt->fetchAll()]);
+    $pdo = getDbConnection();
+
+    // ?meta=1 returns distinct genres and countries for populating dropdowns.
+    if (!empty($_GET['meta'])) {
+        $genreRows = $pdo->query('SELECT genre FROM movies WHERE genre != ""')->fetchAll(PDO::FETCH_COLUMN);
+        $genres = [];
+        foreach ($genreRows as $g) {
+            foreach (array_map('trim', explode(',', $g)) as $item) {
+                if ($item !== '') $genres[$item] = true;
+            }
+        }
+        ksort($genres);
+
+        $countryRows = $pdo->query('SELECT country FROM movies WHERE country != ""')->fetchAll(PDO::FETCH_COLUMN);
+        $countries = [];
+        foreach ($countryRows as $c) {
+            foreach (array_map('trim', explode(',', $c)) as $item) {
+                if ($item !== '') $countries[$item] = true;
+            }
+        }
+        ksort($countries);
+
+        echo json_encode(['genres' => array_keys($genres), 'countries' => array_keys($countries)]);
+        exit;
+    }
+
+    // Build WHERE clauses from query params.
+    $where  = [];
+    $params = [];
+
+    if (!empty($_GET['title'])) {
+        $where[]  = 'title LIKE ?';
+        $params[] = '%' . $_GET['title'] . '%';
+    }
+    if (!empty($_GET['genre'])) {
+        $where[]  = 'genre LIKE ?';
+        $params[] = '%' . $_GET['genre'] . '%';
+    }
+    if (isset($_GET['year_from']) && $_GET['year_from'] !== '') {
+        $where[]  = 'release_year >= ?';
+        $params[] = (int) $_GET['year_from'];
+    }
+    if (isset($_GET['year_to']) && $_GET['year_to'] !== '') {
+        $where[]  = 'release_year <= ?';
+        $params[] = (int) $_GET['year_to'];
+    }
+    if (!empty($_GET['country'])) {
+        $where[]  = 'country LIKE ?';
+        $params[] = '%' . $_GET['country'] . '%';
+    }
+
+    $allowedSort = ['id', 'title', 'release_year', 'duration_min', 'rating'];
+    $sortBy  = in_array($_GET['sort_by'] ?? '', $allowedSort, true) ? $_GET['sort_by'] : 'id';
+    $sortDir = ($_GET['sort_dir'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
+
+    $sql = 'SELECT id, title, director, release_year, duration_min, rating, genre, country, description FROM movies';
+    if ($where) {
+        $sql .= ' WHERE ' . implode(' AND ', $where);
+    }
+    $sql .= " ORDER BY {$sortBy} {$sortDir}";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $movies = $stmt->fetchAll();
+
+    echo json_encode(['movies' => $movies, 'total' => count($movies)]);
     exit;
 }
 
@@ -49,8 +109,8 @@ if ($method === 'POST') {
 
     $pdo  = getDbConnection();
     $stmt = $pdo->prepare(
-        'INSERT INTO movies (title, director, release_year, duration_min, rating, genre, description)
-         VALUES (?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO movies (title, director, release_year, duration_min, rating, genre, country, description)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         trim($body['title']),
@@ -59,6 +119,7 @@ if ($method === 'POST') {
         (int) $body['duration_min'],
         $body['rating'],
         trim($body['genre']),
+        trim($body['country'] ?? ''),
         trim($body['description'] ?? ''),
     ]);
 
@@ -90,7 +151,7 @@ if ($method === 'PATCH') {
     $pdo  = getDbConnection();
     $stmt = $pdo->prepare(
         'UPDATE movies
-         SET title = ?, director = ?, release_year = ?, duration_min = ?, rating = ?, genre = ?, description = ?
+         SET title = ?, director = ?, release_year = ?, duration_min = ?, rating = ?, genre = ?, country = ?, description = ?
          WHERE id = ?'
     );
     $stmt->execute([
@@ -100,6 +161,7 @@ if ($method === 'PATCH') {
         (int) $body['duration_min'],
         $body['rating'],
         trim($body['genre']),
+        trim($body['country'] ?? ''),
         trim($body['description'] ?? ''),
         $id,
     ]);
@@ -186,6 +248,11 @@ function validateMovie(array $data): array
         $errors['genre'] = 'Genre is required.';
     } elseif (strlen($genre) > 255) {
         $errors['genre'] = 'Genre must be 255 characters or fewer.';
+    }
+
+    $country = trim($data['country'] ?? '');
+    if (strlen($country) > 255) {
+        $errors['country'] = 'Country must be 255 characters or fewer.';
     }
 
     $description = trim($data['description'] ?? '');

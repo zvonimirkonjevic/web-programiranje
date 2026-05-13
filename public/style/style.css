@@ -328,6 +328,92 @@ table img {
     cursor: pointer;
 }
 
+.filter-group select,
+.filter-group input[type="number"] {
+    background: var(--imdb-black);
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    color: var(--text-white);
+    padding: 8px 12px;
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.filter-group select:focus,
+.filter-group input[type="number"]:focus {
+    border-color: var(--imdb-gold);
+}
+
+.filter-group select option {
+    background: var(--imdb-dark-gray);
+}
+
+.year-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.year-range input { width: 80px; }
+
+.year-range span { color: var(--text-gray); font-size: 0.9rem; }
+
+.sort-group {
+    display: flex;
+    gap: 6px;
+}
+
+.sort-group select { flex: 1; }
+
+.btn-sort-dir {
+    background: var(--imdb-black);
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    color: var(--text-white);
+    font-size: 1rem;
+    width: 36px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-sort-dir:hover {
+    border-color: var(--imdb-gold);
+    color: var(--imdb-gold);
+}
+
+.filter-actions {
+    display: flex;
+    align-items: flex-end;
+}
+
+.btn-reset {
+    background: transparent;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    color: var(--text-gray);
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-reset:hover {
+    border-color: var(--text-white);
+    color: var(--text-white);
+}
+
+.results-info {
+    font-size: 0.82rem;
+    color: var(--text-gray);
+    margin-bottom: 10px;
+    max-width: fit-content;
+}
+
 /* Watchlist panel */
 .watchlist-panel {
     background-color: var(--imdb-dark-gray);

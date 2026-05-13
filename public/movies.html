@@ -232,6 +232,7 @@
                     <th>Duration</th>
                     <th>Rating</th>
                     <th>Genre</th>
+                    <th>Country</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -306,6 +307,12 @@
                 </div>
             </div>
 
+            <div class="form-group" id="fg-country">
+                <label for="f-country">Country</label>
+                <input type="text" id="f-country" maxlength="255" placeholder="e.g. United States, Germany">
+                <div class="field-error" id="err-country"></div>
+            </div>
+
             <div class="form-group" id="fg-description">
                 <label for="f-description">Description</label>
                 <textarea id="f-description" maxlength="2000" rows="3"></textarea>
@@ -360,6 +367,7 @@ function openModal(movie = null) {
         document.getElementById('f-duration').value        = movie.duration_min;
         document.getElementById('f-rating').value          = movie.rating;
         document.getElementById('f-genre').value           = movie.genre;
+        document.getElementById('f-country').value         = movie.country;
         document.getElementById('f-description').value     = movie.description;
     } else {
         document.getElementById('modal-title').textContent = 'Add movie';
@@ -383,6 +391,7 @@ function buildRow(movie) {
         <td>${movie.duration_min} min</td>
         <td>${escHtml(movie.rating)}</td>
         <td>${escHtml(movie.genre)}</td>
+        <td>${escHtml(movie.country || '—')}</td>
         <td class="col-desc" title="${escHtml(movie.description)}">${escHtml(movie.description)}</td>
         <td style="white-space:nowrap;">
             <button class="btn-edit"   onclick="editMovie(${movie.id})">Edit</button>
@@ -451,6 +460,7 @@ document.getElementById('movie-form').addEventListener('submit', async (e) => {
         duration_min: document.getElementById('f-duration').value,
         rating:       document.getElementById('f-rating').value,
         genre:        document.getElementById('f-genre').value.trim(),
+        country:      document.getElementById('f-country').value.trim(),
         description:  document.getElementById('f-description').value.trim(),
     };
     if (id) payload.id = parseInt(id);

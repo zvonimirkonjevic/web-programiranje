@@ -41,35 +41,61 @@
     <h1>IMDb Top 50 Movies</h1>
     <section class="filters">
         <div class="filter-group">
-            <label for="filter-text">Search title</label>
-            <input type="text" id="filter-text" placeholder="e.g. Dark…">
+            <label for="filter-title">Search title</label>
+            <input type="text" id="filter-title" placeholder="e.g. Dark…">
         </div>
         <div class="filter-group">
-            <label for="filter-year">From year: <span id="year-value">—</span></label>
-            <input type="range" id="filter-year" min="1900" max="2021" value="1900">
+            <label for="filter-genre">Genre</label>
+            <select id="filter-genre">
+                <option value="">All genres</option>
+            </select>
         </div>
         <div class="filter-group">
-            <span class="filter-label">Audience</span>
-            <div class="radio-group">
-                <label><input type="radio" name="filter-rating" value="all" checked> All</label>
-                <label><input type="radio" name="filter-rating" value="kids"> Kids</label>
-                <label><input type="radio" name="filter-rating" value="teen"> Teen</label>
-                <label><input type="radio" name="filter-rating" value="adult"> Adult</label>
+            <label>Year</label>
+            <div class="year-range">
+                <input type="number" id="filter-year-from" placeholder="From" min="1888" max="2035">
+                <span>–</span>
+                <input type="number" id="filter-year-to" placeholder="To" min="1888" max="2035">
             </div>
         </div>
+        <div class="filter-group">
+            <label for="filter-country">Country</label>
+            <select id="filter-country">
+                <option value="">All countries</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filter-sort">Sort by</label>
+            <div class="sort-group">
+                <select id="filter-sort">
+                    <option value="id">Default</option>
+                    <option value="title">Title</option>
+                    <option value="release_year">Year</option>
+                    <option value="duration_min">Duration</option>
+                    <option value="rating">Rating</option>
+                </select>
+                <button id="btn-sort-dir" class="btn-sort-dir" title="Toggle sort direction">↑</button>
+            </div>
+        </div>
+        <div class="filter-actions">
+            <button id="btn-reset" class="btn-reset">Reset</button>
+        </div>
     </section>
+    <p class="results-info" id="results-info"></p>
     <div class="content-wrapper">
 
     <div class="table-container">
         <table>
         <thead>
             <tr>
-                <th>Poster</th><th>Rank</th>
+                <th>Poster</th>
+                <th>Rank</th>
                 <th>Title</th>
                 <th>Year</th>
                 <th>Duration (min)</th>
                 <th>Rating</th>
                 <th>Genre</th>
+                <th>Country</th>
                 <th></th>
             </tr>
         </thead>

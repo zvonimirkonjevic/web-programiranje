@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — IMDb</title>
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+        .dashboard-card {
+            background: var(--imdb-dark-gray);
+            border: 1px solid var(--border-gray);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 540px;
+            margin: auto;
+        }
+        .dashboard-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+        .dashboard-card .subtitle {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-gray);
+            font-size: 0.95rem;
+        }
+        .info-row:last-of-type { border-bottom: none; }
+        .info-label { color: var(--text-gray); }
+        .info-value { font-weight: 600; }
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .role-badge.user  { background: rgba(87,153,239,0.2); color: var(--imdb-blue); }
+        .role-badge.admin { background: rgba(245,197,24,0.2);  color: var(--imdb-gold); }
+        .btn-logout {
+            display: block;
+            width: 100%;
+            margin-top: 32px;
+            background: transparent;
+            color: #e05252;
+            border: 1px solid #e05252;
+            border-radius: 6px;
+            padding: 11px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-logout:hover {
+            background: rgba(224,82,82,0.15);
+        }
+        .loading { text-align: center; color: var(--text-gray); margin: 60px auto; }
+        footer {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="index.html" class="logo">IMDb</a>
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="hamburger">
+        <span></span><span></span><span></span>
+    </label>
+    <ul>
+        <li><a href="index.html">Movie list</a></li>
+        <li><a href="/slike">Images page</a></li>
+        <li><a href="grafikon.html">Statistics page</a></li>
+        <li><a href="dashboard.html" class="active">My account</a></li>
+    </ul>
+</nav>
+
+<p class="loading" id="loading">Loading…</p>
+
+<div class="dashboard-card" id="dashboard" style="display:none;">
+    <h1>My account</h1>
+    <p class="subtitle" id="welcome-msg"></p>
+
+    <div class="info-row">
+        <span class="info-label">Username</span>
+        <span class="info-value" id="info-username"></span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value" id="info-email"></span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Role</span>
+        <span class="info-value"><span class="role-badge" id="info-role"></span></span>
+    </div>
+
+    <button class="btn-logout" id="logout-btn">Sign out</button>
+</div>
+
+<footer><p>Copyright &copy; 2026 IMDb. All rights reserved.</p></footer>
+
+<script>
+    const PHP_API = 'http://localhost:8080';
+
+    async function loadDashboard() {
+        try {
+            const res = await fetch(`${PHP_API}/api/check_auth.php`, { credentials: 'include' });
+            if (!res.ok) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { user } = await res.json();
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+
+            document.getElementById('welcome-msg').textContent  = `Welcome back, ${user.username}!`;
+            document.getElementById('info-username').textContent = user.username;
+            document.getElementById('info-email').textContent    = user.email;
+
+            const roleBadge = document.getElementById('info-role');
+            roleBadge.textContent = user.role;
+            roleBadge.className   = `role-badge ${user.role}`;
+
+            if (user.role === 'admin') {
+                const adminLink = document.createElement('a');
+                adminLink.href  = 'admin.html';
+                adminLink.style.cssText = 'display:block;text-align:center;margin-top:16px;color:var(--imdb-gold);text-decoration:none;font-size:0.9rem;font-weight:600;';
+                adminLink.textContent   = 'Go to Admin panel →';
+                document.getElementById('dashboard').appendChild(adminLink);
+            }
+        } catch (_) {
+            window.location.href = 'login.html';
+        }
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch(`${PHP_API}/api/logout.php`, { method: 'POST', credentials: 'include' });
+        window.location.href = 'login.html';
+    });
+
+    loadDashboard();
+</script>
+</body>
+</html>

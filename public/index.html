@@ -36,6 +36,8 @@
             <li><a href="index.html" class="active">Movie list</a></li>
             <li><a href="/slike">Images page</a></li>
             <li><a href="grafikon.html">Statistics page</a></li>
+            <li><a href="login.html" id="nav-login">Login</a></li>
+            <li><a href="dashboard.html" id="nav-dashboard" style="display:none;">My account</a></li>
         </ul>
     </nav>
     <h1>IMDb Top 50 Movies</h1>
@@ -105,6 +107,17 @@
         </aside>
     </div>
 <script src="script.js"></script>
+<script>
+    fetch('http://localhost:8080/api/check_auth.php', { credentials: 'include' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+            if (data && data.authenticated) {
+                document.getElementById('nav-login').style.display     = 'none';
+                document.getElementById('nav-dashboard').style.display = '';
+            }
+        })
+        .catch(() => {});
+</script>
 <footer>
         <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>
         <p>Created by: Zvonimir Konjevic</p>

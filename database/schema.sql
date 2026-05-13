@@ -47,6 +47,16 @@ INSERT IGNORE INTO movies (id, title, director, release_year, duration_min, rati
 (16, 'Ankahi Kahaniya', 'Ashwiny Iyer Tiwari, Abhishek Chaubey, Saket Chaudhary', 2021, 111, 'TV-14', 'Dramas, Independent Movies, International Movies', '', 'As big city life buzzes around them, lonely souls discover surprising sources of connection and companionship in three tales of love, loss and longing.'),
 (17, 'The Father Who Moves Mountains', 'Daniel Sandu', 2021, 110, 'TV-MA', 'Dramas, International Movies, Thrillers', '', 'When his son goes missing during a snowy hike in the mountains, a retired intelligence officer will stop at nothing — and risk everything — to find him.');
 
+CREATE TABLE IF NOT EXISTS watchlists (
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT UNSIGNED NOT NULL,
+    movie_id   INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_movie (user_id, movie_id),
+    FOREIGN KEY (user_id)  REFERENCES users(id)  ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Seed a default admin account.
 -- Password is: Admin@1234
 -- Generated with: password_hash('Admin@1234', PASSWORD_BCRYPT, ['cost' => 12])

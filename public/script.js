@@ -3,6 +3,7 @@ const IMAGE_COUNT = 17;
 
 let allMovies = [];
 let sortDir = 'asc';
+let currentUser = null;
 
 function imgIndex(movieId) {
     return ((movieId - 1) % IMAGE_COUNT) + 1;
@@ -29,8 +30,7 @@ function renderMovies(movies) {
             <td data-label="Genre">${movie.genre}</td>
             <td data-label="Country">${movie.country || '—'}</td>
             <td data-label="Watchlist">
-                <button class="btn-watchlist${allMovies.some(m => m.id == movie.id) && false ? ' btn-watchlist--added' : ''}"
-                    data-img="${img}" data-id="${movie.id}">+ Watch</button>
+                <button class="btn-watchlist" data-img="${img}" data-id="${movie.id}">+ Watch</button>
             </td>
         </tr>`;
     }).join('');
@@ -89,11 +89,53 @@ function onImmediateFilterChange() {
     fetchMovies();
 }
 
-// ── Watchlist ────────────────────────────────────────────────────────────────
+// ── Auth ─────────────────────────────────────────────────────────────────────
+
+async function checkAuth() {
+    try {
+        const res = await fetch(`${PHP_API}/api/check_auth.php`, { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.authenticated) {
+            currentUser = data.user;
+            document.getElementById('nav-login').style.display = 'none';
+            document.getElementById('nav-dashboard').style.display = '';
+        }
+    } catch (_) {}
+}
+
+// ── Watchlist ─────────────────────────────────────────────────────────────────
 
 const watchlist = new Set();
 
-function addMoviesToWatchlist() {
+async function loadWatchlistFromDb() {
+    try {
+        const res = await fetch(`${PHP_API}/api/watchlist.php`, { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        data.movie_ids.forEach(id => watchlist.add(String(id)));
+    } catch (_) {}
+}
+
+async function addToWatchlistDb(movieId) {
+    await fetch(`${PHP_API}/api/watchlist.php`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ movie_id: parseInt(movieId) }),
+    });
+}
+
+async function removeFromWatchlistDb(movieId) {
+    await fetch(`${PHP_API}/api/watchlist.php`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ movie_id: parseInt(movieId) }),
+    });
+}
+
+function renderWatchlistSidebar() {
     const container = document.getElementById('watchlist-items');
     const empty = document.getElementById('watchlist-empty');
     const count = document.getElementById('watchlist-count');
@@ -121,19 +163,27 @@ function addMoviesToWatchlist() {
     }).join('');
 }
 
-document.addEventListener('click', e => {
+document.addEventListener('click', async e => {
     if (e.target.classList.contains('btn-watchlist')) {
         const id = e.target.getAttribute('data-id');
+
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
         if (watchlist.has(id)) {
             watchlist.delete(id);
             e.target.textContent = '+ Watch';
             e.target.classList.remove('btn-watchlist--added');
+            await removeFromWatchlistDb(id);
         } else {
             watchlist.add(id);
             e.target.textContent = 'Remove';
             e.target.classList.add('btn-watchlist--added');
+            await addToWatchlistDb(id);
         }
-        addMoviesToWatchlist();
+        renderWatchlistSidebar();
     }
 
     if (e.target.classList.contains('btn-watched')) {
@@ -144,13 +194,20 @@ document.addEventListener('click', e => {
             tableBtn.textContent = '+ Watch';
             tableBtn.classList.remove('btn-watchlist--added');
         }
-        addMoviesToWatchlist();
+        await removeFromWatchlistDb(id);
+        renderWatchlistSidebar();
     }
 });
 
-// ── Bootstrap ────────────────────────────────────────────────────────────────
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
 
 async function init() {
+    await checkAuth();
+
+    if (currentUser) {
+        await loadWatchlistFromDb();
+    }
+
     // Populate genre and country dropdowns from server.
     try {
         const res = await fetch(`${PHP_API}/api/movies.php?meta=1`);

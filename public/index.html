@@ -131,17 +131,6 @@
         </aside>
     </div>
 <script src="script.js"></script>
-<script>
-    fetch('http://localhost:8080/api/check_auth.php', { credentials: 'include' })
-        .then(r => r.ok ? r.json() : null)
-        .then(data => {
-            if (data && data.authenticated) {
-                document.getElementById('nav-login').style.display     = 'none';
-                document.getElementById('nav-dashboard').style.display = '';
-            }
-        })
-        .catch(() => {});
-</script>
 <footer>
         <p>Copyright &copy; 2026 IMDb. All rights reserved.</p>
         <p>Created by: Zvonimir Konjevic</p>

@@ -36,18 +36,7 @@
         .info-row:last-of-type { border-bottom: none; }
         .info-label { color: var(--text-gray); }
         .info-value { font-weight: 600; }
-        .role-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .role-badge.user  { background: rgba(87,153,239,0.2); color: var(--imdb-blue); }
-        .role-badge.admin { background: rgba(245,197,24,0.2);  color: var(--imdb-gold); }
-        .btn-logout {
+.btn-logout {
             display: block;
             width: 100%;
             margin-top: 32px;
@@ -103,11 +92,6 @@
         <span class="info-label">Email</span>
         <span class="info-value" id="info-email"></span>
     </div>
-    <div class="info-row">
-        <span class="info-label">Role</span>
-        <span class="info-value"><span class="role-badge" id="info-role"></span></span>
-    </div>
-
     <button class="btn-logout" id="logout-btn">Sign out</button>
 </div>
 
@@ -132,18 +116,6 @@
             document.getElementById('welcome-msg').textContent  = `Welcome back, ${user.username}!`;
             document.getElementById('info-username').textContent = user.username;
             document.getElementById('info-email').textContent    = user.email;
-
-            const roleBadge = document.getElementById('info-role');
-            roleBadge.textContent = user.role;
-            roleBadge.className   = `role-badge ${user.role}`;
-
-            if (user.role === 'admin') {
-                const adminLink = document.createElement('a');
-                adminLink.href  = 'admin.html';
-                adminLink.style.cssText = 'display:block;text-align:center;margin-top:16px;color:var(--imdb-gold);text-decoration:none;font-size:0.9rem;font-weight:600;';
-                adminLink.textContent   = 'Go to Admin panel →';
-                document.getElementById('dashboard').appendChild(adminLink);
-            }
         } catch (_) {
             window.location.href = 'login.html';
         }

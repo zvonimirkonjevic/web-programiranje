@@ -33,11 +33,6 @@ function isLoggedIn(): bool
     return !empty($_SESSION['user']);
 }
 
-function isAdmin(): bool
-{
-    return !empty($_SESSION['user']) && $_SESSION['user']['role'] === 'admin';
-}
-
 function destroySession(): void
 {
     session_unset();

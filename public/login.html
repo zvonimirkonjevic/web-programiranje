@@ -139,7 +139,7 @@
             if (res.ok) {
                 const data = await res.json();
                 if (data.authenticated) {
-                    window.location.href = data.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+                    window.location.href = 'dashboard.html';
                 }
             }
         } catch (_) {}
@@ -179,7 +179,7 @@
                 successEl.textContent = `Welcome back, ${data.user.username}! Redirecting…`;
                 successEl.style.display = 'block';
                 setTimeout(() => {
-                    window.location.href = data.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+                    window.location.href = 'dashboard.html';
                 }, 800);
             }
         } catch (err) {

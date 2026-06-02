@@ -10,18 +10,11 @@
             display: flex;
             align-items: baseline;
             gap: 14px;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
         .page-header h1 { font-size: 1.8rem; }
-        .library-count {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-        }
-        .table-wrapper {
-            max-width: 1100px;
-            margin: 0 auto;
-            overflow-x: auto;
-        }
+        .library-count { color: var(--text-gray); font-size: 0.95rem; }
+        .table-wrapper { max-width: 1100px; margin: 0 auto; overflow-x: auto; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -41,21 +34,11 @@
             letter-spacing: 0.06em;
             white-space: nowrap;
         }
-        td {
-            padding: 12px 16px;
-            border-top: 1px solid var(--border-gray);
-            vertical-align: middle;
-        }
-        td img {
-            width: 42px;
-            height: 63px;
-            object-fit: cover;
-            border-radius: 4px;
-            display: block;
-        }
+        td { padding: 12px 16px; border-top: 1px solid var(--border-gray); vertical-align: middle; }
+        td img { width: 42px; height: 63px; object-fit: cover; border-radius: 4px; display: block; }
         tr:hover td { background: rgba(255,255,255,0.03); }
         .col-title { font-weight: 600; }
-        .col-genre { color: var(--text-gray); font-size: 0.85rem; }
+        .col-genre  { color: var(--text-gray); font-size: 0.85rem; }
         .btn-remove {
             background: rgba(224,82,82,0.15);
             color: #e05252;
@@ -70,11 +53,7 @@
         }
         .btn-remove:hover { opacity: 0.75; }
         .btn-remove:disabled { opacity: 0.4; cursor: not-allowed; }
-        .empty-state {
-            text-align: center;
-            padding: 70px 20px;
-            color: var(--text-gray);
-        }
+        .empty-state { text-align: center; padding: 70px 20px; color: var(--text-gray); }
         .empty-state p { font-size: 1rem; margin-bottom: 20px; }
         .empty-state a {
             display: inline-block;
@@ -88,6 +67,22 @@
             transition: background 0.2s;
         }
         .empty-state a:hover { background: #fbd54e; }
+        .guest-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(245,197,24,0.08);
+            border: 1px solid rgba(245,197,24,0.4);
+            border-radius: 8px;
+            color: var(--imdb-gold);
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .guest-banner a { color: var(--imdb-gold); font-weight: 700; }
         .alert {
             padding: 12px 16px;
             border-radius: 6px;
@@ -129,9 +124,14 @@
         <span class="library-count" id="library-count"></span>
     </div>
 
+    <div class="guest-banner" id="guest-banner" style="display:none;">
+        &#9432; You're browsing as a guest. Your library is saved locally in this browser.
+        <a href="login.html">Log in</a> to save it permanently.
+    </div>
+
     <div class="alert alert-error" id="alert-error"></div>
 
-    <div class="table-wrapper" id="table-wrapper">
+    <div class="table-wrapper">
         <table id="library-table">
             <thead>
                 <tr>
@@ -158,40 +158,45 @@
 <footer><p>Copyright &copy; 2026 IMDb. All rights reserved.</p></footer>
 
 <script>
-    const PHP_API = 'http://localhost:8080';
+    const PHP_API    = 'http://localhost:8080';
     const IMAGE_COUNT = 17;
+    const STORAGE_KEY = 'imdb_watchlist';
+    const LOW = 5.0;
 
-    function imgIndex(movieId) {
-        return ((movieId - 1) % IMAGE_COUNT) + 1;
+    let isLoggedIn = false;
+    let allMovies  = [];
+
+    function imgIndex(id) { return ((id - 1) % IMAGE_COUNT) + 1; }
+
+    function getLocalIds() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]').map(String); }
+        catch { return []; }
     }
 
-    let movies = [];
+    function saveLocalIds(ids) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    }
 
     function updateCount() {
-        const count = document.getElementById('library-tbody').querySelectorAll('tr').length;
-        const el = document.getElementById('library-count');
-        if (count === 0) {
+        const rows = document.getElementById('library-tbody').querySelectorAll('tr').length;
+        const el   = document.getElementById('library-count');
+        if (rows === 0) {
             el.textContent = '';
             document.getElementById('library-table').style.display = 'none';
-            document.getElementById('empty-state').style.display = 'block';
+            document.getElementById('empty-state').style.display   = 'block';
         } else {
-            el.textContent = `${count} movie${count === 1 ? '' : 's'}`;
+            el.textContent = `${rows} movie${rows === 1 ? '' : 's'}`;
             document.getElementById('library-table').style.display = '';
-            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('empty-state').style.display   = 'none';
         }
     }
 
     function renderTable(movieList) {
         const tbody = document.getElementById('library-tbody');
-        if (movieList.length === 0) {
-            tbody.innerHTML = '';
-            updateCount();
-            return;
-        }
-        const LOW = 5.0;
+        if (movieList.length === 0) { tbody.innerHTML = ''; updateCount(); return; }
         tbody.innerHTML = movieList.map(movie => {
-            const img = imgIndex(movie.id);
-            const score = parseFloat(movie.score ?? 0);
+            const img      = imgIndex(movie.id);
+            const score    = parseFloat(movie.score ?? 0);
             const scoreCls = score < LOW ? 'score-low' : '';
             return `<tr data-id="${movie.id}">
                 <td><img src="images/movie_${img}.png" alt="${movie.title}"></td>
@@ -202,9 +207,7 @@
                 <td><span class="score-badge ${scoreCls}">${score.toFixed(1)}</span></td>
                 <td class="col-genre">${movie.genre}</td>
                 <td>${movie.country || '—'}</td>
-                <td>
-                    <button class="btn-remove" data-id="${movie.id}">Remove</button>
-                </td>
+                <td><button class="btn-remove" data-id="${movie.id}">Remove</button></td>
             </tr>`;
         }).join('');
         updateCount();
@@ -212,64 +215,71 @@
 
     async function loadLibrary() {
         try {
-            const authRes = await fetch(`${PHP_API}/api/check_auth.php`, { credentials: 'include' });
-            if (!authRes.ok) {
-                window.location.href = 'login.html';
-                return;
-            }
-            const authData = await authRes.json();
-            if (!authData.authenticated) {
-                window.location.href = 'login.html';
-                return;
+            // Check auth — but do NOT redirect on failure.
+            const authRes  = await fetch(`${PHP_API}/api/check_auth.php`, { credentials: 'include' });
+            const authData = authRes.ok ? await authRes.json() : { authenticated: false };
+            isLoggedIn = authData.authenticated ?? false;
+
+            let movieList = [];
+
+            if (isLoggedIn) {
+                const res  = await fetch(`${PHP_API}/api/watchlist.php`, { credentials: 'include' });
+                const data = await res.json();
+                movieList  = data.movies ?? [];
+            } else {
+                // Guest: get IDs from localStorage, then fetch full details from public API.
+                const localIds = getLocalIds();
+                if (localIds.length > 0) {
+                    const res  = await fetch(`${PHP_API}/api/movies.php`);
+                    const data = await res.json();
+                    allMovies  = data.movies ?? [];
+                    movieList  = allMovies.filter(m => localIds.includes(String(m.id)));
+                }
+                document.getElementById('guest-banner').style.display = 'flex';
             }
 
-            const res = await fetch(`${PHP_API}/api/watchlist.php`, { credentials: 'include' });
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            movies = data.movies;
-
-            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loading').style.display      = 'none';
             document.getElementById('page-content').style.display = 'block';
-            renderTable(movies);
+            renderTable(movieList);
         } catch (_) {
-            document.getElementById('loading').style.display = 'none';
-            const err = document.getElementById('alert-error');
-            err.textContent = 'Could not load your library. Is the PHP server running?';
-            err.style.display = 'block';
+            document.getElementById('loading').style.display      = 'none';
             document.getElementById('page-content').style.display = 'block';
+            const err = document.getElementById('alert-error');
+            err.textContent   = 'Could not load your library. Is the PHP server running?';
+            err.style.display = 'block';
         }
     }
 
     document.addEventListener('click', async e => {
         if (!e.target.classList.contains('btn-remove')) return;
 
-        const btn = e.target;
-        const movieId = parseInt(btn.dataset.id);
-        btn.disabled = true;
+        const btn     = e.target;
+        const movieId = String(btn.dataset.id);
+        btn.disabled    = true;
         btn.textContent = 'Removing…';
 
         try {
-            const res = await fetch(`${PHP_API}/api/watchlist.php`, {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ movie_id: movieId }),
-            });
-
-            if (res.ok) {
-                const row = btn.closest('tr');
-                row.remove();
-                updateCount();
+            if (isLoggedIn) {
+                const res = await fetch(`${PHP_API}/api/watchlist.php`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ movie_id: parseInt(movieId) }),
+                });
+                if (!res.ok) throw new Error();
             } else {
-                btn.disabled = false;
-                btn.textContent = 'Remove';
-                const err = document.getElementById('alert-error');
-                err.textContent = 'Failed to remove the movie. Please try again.';
-                err.style.display = 'block';
+                const ids    = getLocalIds().filter(id => id !== movieId);
+                saveLocalIds(ids);
             }
+
+            btn.closest('tr').remove();
+            updateCount();
         } catch (_) {
-            btn.disabled = false;
+            btn.disabled    = false;
             btn.textContent = 'Remove';
+            const err = document.getElementById('alert-error');
+            err.textContent   = 'Failed to remove the movie. Please try again.';
+            err.style.display = 'block';
         }
     });
 

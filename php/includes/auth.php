@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../config/database.php';
 
-function registerUser(string $username, string $email, string $password, string $role = 'user'): array
+function registerUser(string $username, string $email, string $password): array
 {
     $username = trim($username);
     $email = trim($email);
@@ -19,9 +19,6 @@ function registerUser(string $username, string $email, string $password, string 
     if (strlen($password) < 8) {
         return ['success' => false, 'error' => 'Password must be at least 8 characters.'];
     }
-    if (!in_array($role, ['user', 'admin'], true)) {
-        $role = 'user';
-    }
 
     $pdo = getDbConnection();
 
@@ -34,9 +31,9 @@ function registerUser(string $username, string $email, string $password, string 
     $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
     $stmt = $pdo->prepare(
-        'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)'
+        'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)'
     );
-    $stmt->execute([$username, $email, $hash, $role]);
+    $stmt->execute([$username, $email, $hash]);
 
     return ['success' => true, 'user_id' => (int) $pdo->lastInsertId()];
 }
@@ -47,7 +44,7 @@ function loginUser(string $identifier, string $password): array
     $pdo = getDbConnection();
 
     $stmt = $pdo->prepare(
-        'SELECT id, username, email, password_hash, role FROM users WHERE username = ? OR email = ? LIMIT 1'
+        'SELECT id, username, email, password_hash FROM users WHERE username = ? OR email = ? LIMIT 1'
     );
     $stmt->execute([$identifier, $identifier]);
     $user = $stmt->fetch();
@@ -69,35 +66,7 @@ function loginUser(string $identifier, string $password): array
             'id' => (int) $user['id'],
             'username' => $user['username'],
             'email' => $user['email'],
-            'role' => $user['role'],
         ],
     ];
 }
 
-function getAllUsers(): array
-{
-    $pdo = getDbConnection();
-    $stmt = $pdo->query(
-        'SELECT id, username, email, role, created_at FROM users ORDER BY created_at DESC'
-    );
-    return $stmt->fetchAll();
-}
-
-function updateUserRole(int $userId, string $role): bool
-{
-    if (!in_array($role, ['user', 'admin'], true)) {
-        return false;
-    }
-    $pdo = getDbConnection();
-    $stmt = $pdo->prepare('UPDATE users SET role = ? WHERE id = ?');
-    $stmt->execute([$role, $userId]);
-    return $stmt->rowCount() > 0;
-}
-
-function deleteUser(int $userId): bool
-{
-    $pdo = getDbConnection();
-    $stmt = $pdo->prepare('DELETE FROM users WHERE id = ?');
-    $stmt->execute([$userId]);
-    return $stmt->rowCount() > 0;
-}
